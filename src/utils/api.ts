@@ -1,8 +1,4 @@
-import axios from 'axios';
 import type { SearchResponse, RecipeInfo } from '../types/recipe';
-
-const API_BASE_URL = 'https://api.spoonacular.com/recipes';
-const API_KEY = 'YOUR_API_KEY_HERE';
 
 // Mock data for testing without API key
 const mockRecipes = [
@@ -114,22 +110,17 @@ const mockRecipes = [
   }
 ];
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  params: {
-    apiKey: API_KEY,
-  },
-});
+// axios instance removed as it's currently unused with mock data
 
 export const searchRecipes = async (query: string, number: number = 10): Promise<SearchResponse> => {
   // For demo purposes, return mock data filtered by query
   await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  
-  const filteredRecipes = mockRecipes.filter(recipe => 
+
+  const filteredRecipes = mockRecipes.filter(recipe =>
     recipe.title.toLowerCase().includes(query.toLowerCase()) ||
     recipe.summary.toLowerCase().includes(query.toLowerCase())
   );
-  
+
   return {
     results: filteredRecipes.slice(0, number),
     offset: 0,
@@ -141,22 +132,22 @@ export const searchRecipes = async (query: string, number: number = 10): Promise
 export const getRecipeById = async (id: number): Promise<RecipeInfo> => {
   // For demo purposes, return mock data
   await new Promise(resolve => setTimeout(resolve, 300)); // Simulate API delay
-  
+
   const recipe = mockRecipes.find(r => r.id === id);
   if (!recipe) {
     throw new Error('Recipe not found');
   }
-  
+
   return recipe as RecipeInfo;
 };
 
 export const getRandomRecipes = async (number: number = 10): Promise<SearchResponse> => {
   // For demo purposes, return mock data
   await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  
+
   const shuffled = [...mockRecipes].sort(() => 0.5 - Math.random());
   const selected = shuffled.slice(0, Math.min(number, mockRecipes.length));
-  
+
   return {
     results: selected,
     offset: 0,

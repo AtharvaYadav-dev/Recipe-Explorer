@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, Users, Flame, ChefHat, Plus, X, Check, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Users, Flame, Plus, X, AlertCircle } from 'lucide-react';
 import type { Recipe, RecipeInfo } from '../types/recipe';
 
 interface MealPlan {

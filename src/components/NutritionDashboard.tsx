@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Target, TrendingUp, Award, Calendar, Activity, Apple, Droplets } from 'lucide-react';
+import { Flame, Target, TrendingUp, Award, Activity, Apple, Droplets } from 'lucide-react';
 import type { Recipe, RecipeInfo } from '../types/recipe';
 
 interface NutritionData {
@@ -30,9 +30,9 @@ interface NutritionDashboardProps {
   }>;
 }
 
-export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: NutritionDashboardProps) => {
+export const NutritionDashboard = ({ consumedMeals = [] }: NutritionDashboardProps) => {
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month'>('today');
-  const [dailyGoals, setDailyGoals] = useState<DailyGoals>({
+  const [dailyGoals] = useState<DailyGoals>({
     calories: 2000,
     protein: 50,
     carbs: 300,
@@ -44,7 +44,7 @@ export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: Nutriti
     // Mock nutrition calculation based on recipe properties
     const baseCalories = (recipe.readyInMinutes || 30) * 8;
     const multiplier = servings;
-    
+
     return {
       calories: baseCalories * multiplier,
       protein: baseCalories * 0.15 * multiplier,
@@ -59,7 +59,7 @@ export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: Nutriti
   const getTodayNutrition = (): NutritionData => {
     const today = new Date().toISOString().split('T')[0];
     const todayMeals = consumedMeals.filter(meal => meal.date === today);
-    
+
     return todayMeals.reduce((acc, meal) => {
       const nutrition = calculateNutrition(meal.recipe, meal.servings);
       return {
@@ -78,7 +78,7 @@ export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: Nutriti
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
     const weekMeals = consumedMeals.filter(meal => new Date(meal.date) >= weekAgo);
-    
+
     return weekMeals.reduce((acc, meal) => {
       const nutrition = calculateNutrition(meal.recipe, meal.servings);
       return {
@@ -156,7 +156,7 @@ export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: Nutriti
       getProgressPercentage(avgDailyNutrition.carbs, dailyGoals.carbs),
       getProgressPercentage(avgDailyNutrition.fat, dailyGoals.fat),
     ];
-    
+
     const avgScore = scores.reduce((acc, score) => acc + score, 0) / scores.length;
     return Math.round(avgScore);
   };
@@ -195,11 +195,10 @@ export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: Nutriti
             <button
               key={period}
               onClick={() => setSelectedPeriod(period)}
-              className={`px-6 py-2 rounded-lg font-medium transition-all capitalize ${
-                selectedPeriod === period
+              className={`px-6 py-2 rounded-lg font-medium transition-all capitalize ${selectedPeriod === period
                   ? 'bg-gradient-to-r from-primary to-accent text-white'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
-              }`}
+                }`}
             >
               {period === 'today' ? 'Today' : period === 'week' ? 'This Week' : 'This Month'}
             </button>
@@ -255,7 +254,7 @@ export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: Nutriti
                 <div className="text-sm text-gray-500">of {metric.goal} {metric.unit}</div>
               </div>
             </div>
-            
+
             {/* Progress Bar */}
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
@@ -319,11 +318,10 @@ export const NutritionDashboard = ({ recipes = [], consumedMeals = [] }: Nutriti
               {[...Array(8)].map((_, i) => (
                 <div
                   key={i}
-                  className={`h-8 flex-1 rounded-lg transition-all ${
-                    i < 5
+                  className={`h-8 flex-1 rounded-lg transition-all ${i < 5
                       ? 'bg-gradient-to-t from-blue-400 to-blue-300'
                       : 'bg-gray-200 dark:bg-gray-700'
-                  }`}
+                    }`}
                 />
               ))}
             </div>
